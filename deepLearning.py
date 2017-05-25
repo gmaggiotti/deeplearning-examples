@@ -18,8 +18,8 @@ with open(pickle_file, 'rb') as f:
     test_labels = save['test_labels']
 
     # Test one sample of 'D' letter
-    # test_dataset = test_dataset[0:1]
-    # test_labels = test_labels[0:1]
+    test_dataset = test_dataset[0:1]
+    test_labels = test_labels[0:1]
 
     del save  # hint to help gc free up memory
     print('Training set', train_dataset.shape, train_labels.shape)
@@ -57,10 +57,10 @@ with graph.as_default():
     # Input data.
     # Load the training, validation and test data into constants that are
     # attached to the graph.
-    tf_train_dataset = tf.constant(train_dataset[:train_subset, :])
+    tf_train_dataset = tf.constant(train_dataset[:train_subset, :], name='train_set')
     tf_train_labels = tf.constant(train_labels[:train_subset])
     tf_valid_dataset = tf.constant(valid_dataset)
-    tf_test_dataset = tf.constant(test_dataset)
+    #tf_test_dataset = tf.constant(test_dataset)
 
     # Variables.
     # These are the parameters that we are going to be training. The weight
@@ -70,6 +70,7 @@ with graph.as_default():
         tf.truncated_normal([image_size * image_size, num_labels]))
     biases = tf.Variable(tf.zeros([num_labels]))
 
+
     # Training computation.
     # We multiply the inputs with the weight matrix, and add biases. We compute
     # the softmax and cross-entropy (it's one operation in TensorFlow, because
@@ -78,6 +79,13 @@ with graph.as_default():
     logits = tf.matmul(tf_train_dataset, weights) + biases
     loss = tf.reduce_mean(
         tf.nn.softmax_cross_entropy_with_logits(labels=tf_train_labels, logits=logits))
+
+    #this is for write output in tensorboard
+    # for value in [ tf_train_dataset, weights,biases,logits,loss ]:
+    #     tf.summary.scalar(value.op.name, value)
+    #
+    # summaries = tf.summary.merge_all()
+
 
     # Optimizer.
     # We are going to find the minimum of this loss using gradient descent.
@@ -89,7 +97,8 @@ with graph.as_default():
     train_prediction = tf.nn.softmax(logits)
     valid_prediction = tf.nn.softmax(
         tf.matmul(tf_valid_dataset, weights) + biases)
-    test_prediction = tf.nn.softmax(tf.matmul(tf_test_dataset, weights) + biases)
+    #test_prediction = tf.nn.softmax(tf.matmul(tf_test_dataset, weights) + biases)
+
 
 ##
 
@@ -119,5 +128,7 @@ with tf.Session(graph=graph) as session:
             # dependencies.
             print('Validation accuracy: %.1f%%' % accuracy(
                 valid_prediction.eval(), valid_labels))
-    print('Test accuracy: %.1f%%' % accuracy(test_prediction.eval(), test_labels))
 
+    tf_test_dataset = tf.constant(test_dataset)
+    test_prediction = tf.nn.softmax(tf.matmul(tf_test_dataset, weights) + biases)
+    print('Test accuracy: %.1f%%' % accuracy(test_prediction.eval(), test_labels))
