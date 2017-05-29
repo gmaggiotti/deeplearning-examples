@@ -52,6 +52,7 @@ print('Test set', test_dataset.shape, test_labels.shape)
 train_subset = 10000
 
 batch_size = 128
+beta = 0.005
 
 graph = tf.Graph()
 with graph.as_default():
@@ -73,6 +74,7 @@ with graph.as_default():
     logits = tf.matmul(tf_train_dataset, weights) + biases
     loss = tf.reduce_mean(
         tf.nn.softmax_cross_entropy_with_logits(labels=tf_train_labels, logits=logits))
+    loss = tf.reduce_mean(loss + beta * tf.nn.l2_loss(weights) )
 
 
     # Optimizer.
