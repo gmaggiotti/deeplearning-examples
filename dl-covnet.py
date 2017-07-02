@@ -67,19 +67,16 @@ with graph.as_default():
     tf_test_dataset = tf.constant(test_dataset)
 
     # Variables.
-    layer1_weights = tf.Variable(tf.truncated_normal(
-        [patch_size, patch_size, num_channels, depth], stddev=0.1))
+    layer1_weights = tf.Variable(tf.truncated_normal([patch_size, patch_size, num_channels, depth], stddev=0.1))
     layer1_biases = tf.Variable(tf.zeros([depth]))
-    layer2_weights = tf.Variable(tf.truncated_normal(
-        [patch_size, patch_size, depth, depth], stddev=0.1))
+    layer2_weights = tf.Variable(tf.truncated_normal([patch_size, patch_size, depth, depth], stddev=0.1))
     layer2_biases = tf.Variable(tf.constant(1.0, shape=[depth]))
-    layer3_weights = tf.Variable(tf.truncated_normal(
-        [image_size // 4 * image_size // 4 * depth, num_hidden], stddev=0.1))
+    layer3_weights = tf.Variable(tf.truncated_normal([image_size // 4 * image_size // 4 * depth, num_hidden], stddev=0.1))
     layer3_biases = tf.Variable(tf.constant(1.0, shape=[num_hidden]))
-    layer4_weights = tf.Variable(tf.truncated_normal(
-        [num_hidden, num_labels], stddev=0.1))
+    layer4_weights = tf.Variable(tf.truncated_normal([num_hidden, num_labels], stddev=0.1))
     layer4_biases = tf.Variable(tf.constant(1.0, shape=[num_labels]))
 
+###
     # Model.
     def model(data):
         conv = tf.nn.conv2d(data, layer1_weights, [1, 2, 2, 1], padding='SAME')
@@ -90,6 +87,8 @@ with graph.as_default():
         reshape = tf.reshape(hidden, [shape[0], shape[1] * shape[2] * shape[3]])
         hidden = tf.nn.relu(tf.matmul(reshape, layer3_weights) + layer3_biases)
         return tf.matmul(hidden, layer4_weights) + layer4_biases
+
+###
 
     # Training computation.
     logits = model(tf_train_dataset)
@@ -107,7 +106,7 @@ with graph.as_default():
 ####
 
 
-num_steps = 3001
+num_steps = 1001
 
 with tf.Session(graph=graph) as session:
     tf.global_variables_initializer().run()
