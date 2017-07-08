@@ -1,3 +1,3 @@
 # deeplearning-letters
 
-This repository is a project ment to gain experience onbuilding deep neuralnetworks.
+This repository is a project ment to gain experience on building deep neuralnetworks.
