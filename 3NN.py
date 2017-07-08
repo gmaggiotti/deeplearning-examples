@@ -52,15 +52,15 @@ for j in range(60000):
     if(j % 10000) == 0:   # Only print the error every 10000 steps, to save time and limit the amount of output.
         print("Error: " + str(np.mean(np.abs(l2_error))))
 
-    l2_delta = l2_error*sigmoid(l2, deriv=True)
+    l2_adjustment = l2_error*sigmoid(l2, deriv=True)
 
-    l1_error = l2_delta.dot(syn1.T)
+    l1_error = l2_adjustment.dot(syn1.T)
 
-    l1_delta = l1_error * sigmoid(l1,deriv=True)
+    l1_adjustment = l1_error * sigmoid(l1,deriv=True)
 
     #update weights (no learning rate term)
-    syn1 += l1.T.dot(l2_delta)
-    syn0 += l0.T.dot(l1_delta)
+    syn1 += l1.T.dot(l2_adjustment)
+    syn0 += l0.T.dot(l1_adjustment)
 
 print("Output after training")
 print(l2)

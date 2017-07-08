@@ -7,10 +7,10 @@ def sigmoid(x, deriv=False):
 
 
 #input data, each column represent a dif neuron
-X = np.array([[0,0,1],
-             [0,1,1],
-             [12,0,1],
-             [12,12,1]])
+X = np.array([[1,1,1],
+             [0,20,1],
+             [1,5,1],
+             [0,0,0]])
 
 #output, are the one-hot encoded labels
 y = np.array([[0],
@@ -54,18 +54,18 @@ for j in range(60000):
     if(j % 10000) == 0:   # Only print the error every 10000 steps, to save time and limit the amount of output.
         print("Error: " + str(np.mean(np.abs(l3_error))))
 
-    l3_delta = l3_error*sigmoid(l3, deriv=True)
-    l2_error = l3_delta.dot(syn2.T)
+    l3_adjustment = l3_error*sigmoid(l3, deriv=True)
+    l2_error = l3_adjustment.dot(syn2.T)
 
-    l2_delta = l2_error*sigmoid(l2, deriv=True)
-    l1_error = l2_delta.dot(syn1.T)
+    l2_adjustment = l2_error*sigmoid(l2, deriv=True)
+    l1_error = l2_adjustment.dot(syn1.T)
 
-    l1_delta = l1_error * sigmoid(l1,deriv=True)
+    l1_adjustment = l1_error*sigmoid(l1,deriv=True)
 
     #update weights (no learning rate term)
-    syn2 += l2.T.dot(l3_delta)
-    syn1 += l1.T.dot(l2_delta)
-    syn0 += l0.T.dot(l1_delta)
+    syn2 += l2.T.dot(l3_adjustment)
+    syn1 += l1.T.dot(l2_adjustment)
+    syn0 += l0.T.dot(l1_adjustment)
 
 print("Output after training")
 print(l3)
@@ -78,8 +78,8 @@ def predict(X1):
 
     return l3[0] #since process X1[0] output would be l2[0]
 
-X1 = np.array([[0,0,1],
-              [0,0,0],
+X1 = np.array([[3,3,1],
+              [0,1,0],
               [0,0,0],
               [0,0,0]])
 
