@@ -9,11 +9,11 @@ def sigmoid(x, deriv=False):
 #input data, each column represent a dif neuron
 X = np.array([[0,0,1],
              [0,1,1],
-             [12,0,1],
-             [12,12,1]])
+             [1,0,1],
+             [500,12,0]])
 
 #output, are the one-hot encoded labels
-y = np.array([[0],
+y = np.array([[1],
              [1],
              [1],
              [0]])
@@ -71,7 +71,7 @@ def predict(X1):
     l2 = sigmoid(np.dot(l1, syn1))
     return l2[0] #since process X1[0] output would be l2[0]
 
-X1 = np.array([[0,0,1],
+X1 = np.array([[300,12,0],
               [0,0,0],
               [0,0,0],
               [0,0,0]])
