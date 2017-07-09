@@ -70,10 +70,8 @@ def predict(X1):
 
     return l3[0] #since process X1[0] output would be l2[0]
 
-X1 = np.array([[3,5,2,1,1],
-              [0,0,0,1,1],
-              [0,0,0,1,1],
-              [0,0,0,1,1]])
+X1 = np.zeros((4, 7))
+X1[0]=[1,12,22,22,3,5,5]
 
 result = predict(X1)
 print("Output of example should be:" + repr(result))
