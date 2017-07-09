@@ -7,16 +7,10 @@ def sigmoid(x, deriv=False):
 
 
 #input data, each column represent a dif neuron
-X = np.array([[1,1,1],
-             [0,20,1],
-             [1,5,1],
-             [0,0,0]])
+X = np.loadtxt("X.txt",delimiter=",")
 
 #output, are the one-hot encoded labels
-y = np.array([[0],
-             [1],
-             [1],
-             [0]])
+y = np.loadtxt("Y.txt",delimiter=",").reshape(X.__len__(),1)
 
 # The seed for the random generator is set so that it will return the same random numbers each time, which is sometimes useful for debugging.
 
@@ -30,18 +24,16 @@ np.random.seed(1)
 # In[28]:
 
 #synapses
-syn0 = 2*np.random.random((3,4)) - 1  # 3x4 matrix of weights ((2 inputs + 1 bias) x 4 nodes in the hidden layer)
-syn1 = 2*np.random.random((4,4)) - 1
-syn2 = 2*np.random.random((4,1)) - 1  # 4x1 matrix of weights. (4 nodes x 1 output) - no bias term in the hidden layer.
+syn0 = 2*np.random.random((X.size/X.__len__(),X.__len__())) - 1  # 3x4 matrix of weights ((2 inputs + 1 bias) x 4 nodes in the hidden layer)
+syn1 = 2*np.random.random((X.__len__(),X.__len__())) - 1
+syn2 = 2*np.random.random((X.__len__(),1)) - 1  # 4x1 matrix of weights. (4 nodes x 1 output) - no bias term in the hidden layer.
 
 
 # This is the main training loop. The output shows the evolution of the error between the model and desired. The error steadily decreases.
 
 
 #training step
-# Python2 Note: In the follow command, you may improve
-#   performance by replacing 'range' with 'xrange'.
-for j in range(60000):
+for j in xrange(60000):
 
     # Calculate forward through the network.
     l0 = X
@@ -62,7 +54,7 @@ for j in range(60000):
 
     l1_adjustment = l1_error*sigmoid(l1,deriv=True)
 
-    #update weights (no learning rate term)
+    #update weights for all the synapses (no learning rate term)
     syn2 += l2.T.dot(l3_adjustment)
     syn1 += l1.T.dot(l2_adjustment)
     syn0 += l0.T.dot(l1_adjustment)
@@ -78,10 +70,10 @@ def predict(X1):
 
     return l3[0] #since process X1[0] output would be l2[0]
 
-X1 = np.array([[3,3,1],
-              [0,1,0],
-              [0,0,0],
-              [0,0,0]])
+X1 = np.array([[3,5,2,1,1],
+              [0,0,0,1,1],
+              [0,0,0,1,1],
+              [0,0,0,1,1]])
 
 result = predict(X1)
 print("Output of example should be:" + repr(result))
