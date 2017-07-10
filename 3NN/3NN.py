@@ -58,12 +58,6 @@ print("Output after training")
 print(l2)
 
 def predict(X1):
-    l0 = X1
-    l1 = sigmoid(np.dot(l0, syn0))
-    l2 = sigmoid(np.dot(l1, syn1))
-    return l2[0] #since process X1[0] output would be l2[0]
-
-def predict(X1):
     l0 = np.zeros((4, 7))
     l0[0] = X1
     l1 = sigmoid(np.dot(l0, syn0))
