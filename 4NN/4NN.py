@@ -63,17 +63,16 @@ print("Output after training")
 print(l3)
 
 def predict(X1):
-    l0 = X1
+    l0 = np.zeros((4, 7))
+    l0[0] = X1
     l1 = sigmoid(np.dot(l0, syn0))
     l2 = sigmoid(np.dot(l1, syn1))
     l3 = sigmoid(np.dot(l2, syn2))
-
     return l3[0] #since process X1[0] output would be l2[0]
 
-X1 = np.zeros((4, 7))
-X1[0]=[1,12,22,22,3,5,5]
+test_dataset=[1,12,22,22,3,5,5]
 
-result = predict(X1)
+result = predict(test_dataset)
 print("Output of example should be:" + repr(result))
 
 np.array([[1,0,0,0]]).dot(np.array([[1,0,0,0]]).T)
