@@ -7,10 +7,10 @@ def sigmoid(x, deriv=False):
 
 
 #input data, each column represent a dif neuron
-X = np.loadtxt("X.txt",delimiter=",")
+X = np.loadtxt("3NN/X.txt",delimiter=",")
 
 #output, are the one-hot encoded labels
-y = np.loadtxt("Y.txt",delimiter=",").reshape(X.__len__(),1)
+y = np.loadtxt("3NN/Y.txt",delimiter=",").reshape(X.__len__(),1)
 
 # The seed for the random generator is set so that it will return the same random numbers each time, which is sometimes useful for debugging.
 
@@ -63,14 +63,16 @@ def predict(X1):
     l2 = sigmoid(np.dot(l1, syn1))
     return l2[0] #since process X1[0] output would be l2[0]
 
-X1 = np.array([[0,12,12,1],
-              [0,0,0,1],
-              [0,0,0,1],
-              [0,0,0,1]])
+def predict(X1):
+    l0 = np.zeros((4, 7))
+    l0[0] = X1
+    l1 = sigmoid(np.dot(l0, syn0))
+    l2 = sigmoid(np.dot(l1, syn1))
+    return l2[0] #since process X1[0] output would be l2[0]
 
-result = predict(X1)
+test_dataset=[1,9,19,33,16,2,1]
+
+result = predict(test_dataset)
 print("Output of example should be:" + repr(result))
 
-np.array([[1,0,0,0]]).dot(np.array([[1,0,0,0]]).T)
-np.array([[1,0,0,0]])*np.array([[1,0,0,0]]).T
 
