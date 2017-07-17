@@ -7,7 +7,7 @@ def sigmoid(x, deriv=False):
 
 
 #input data, each column represent a dif neuron
-X = np.loadtxt("4NN/train_dataset.txt",delimiter=",")
+X = 2*np.loadtxt("4NN/train_dataset.txt",delimiter=",")/30 - 1
 
 #output, are the one-hot encoded labels
 y = np.loadtxt("4NN/label_dataset.txt",delimiter=",").reshape(X.__len__(),1)
