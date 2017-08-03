@@ -12,35 +12,35 @@ y = np.loadtxt("1NN/Y.txt",delimiter=",").reshape(X.__len__(),1)
 
 np.random.seed(1) # The seed for the random generator is set so that it will return the same random numbers each time, which is sometimes useful for debugging.
 
-# Now we intialize the weights to random values. syn0 are the weights between the input layer and the hidden layer.  It is a 3x4 matrix because there are two input weights plus a bias term (=3) and four nodes in the hidden layer (=4). syn1 are the weights between the hidden layer and the output layer. It is a 4x1 matrix because there are 4 nodes in the hidden layer and one output. Note that there is no bias term feeding the output layer in this example. The weights are initially generated randomly because optimization tends not to work well when all the weights start at the same value. Note that neither of the neural networks shown in the video describe the example.
+# Now we intialize the weights to random values. w0 is the weight between the input layer and the hidden layer.
 
 #synapses
-syn0 = 2*np.random.random((X.size/X.__len__(),X.__len__())) - 1  # 3x4 matrix of weights ((2 inputs + 1 bias) x 4 nodes in the hidden layer)
+w0 = 2*np.random.random((X.size/X.__len__(),X.__len__())) - 1  # mxn matrix of weights 
 
 # This is the main training loop. The output shows the evolution of the error between the model and desired. The error steadily decreases.
 for j in xrange(60000):
 
     # Calculate forward through the network.
-    l0 = X
-    l1 = sigmoid(np.dot(l0, syn0))
+    l1 = sigmoid(np.dot(X, w0))
 
     # Error back propagation of errors using the chain rule.
     l1_error = y - l1
     if(j % 10000) == 0:   # Only print the error every 10000 steps, to save time and limit the amount of output.
         print("Error: " + str(np.mean(np.abs(l1_error))))
 
-    l1_adjustment = l1_error*sigmoid(l1, deriv=True)
+    adjustment = l1_error*sigmoid(l1, deriv=True) #(y-a).d/dw(-a), a = sigmoid(Sum Xi*Wi)
 
     #update weights (no learning rate term)
-    syn0 += l0.T.dot(l1_adjustment)
+    w0 += X.T.dot(adjustment)
 
 print("Output after training")
 print(l1)
 
 def predict(X1):
-    l0 = np.zeros((4, 7))
-    l0[0] = X1
-    l1 = sigmoid(np.dot(l0, syn0))
+    l0 = np.zeros((X.__len__(),X.size/X.__len__()))
+    max = np.matrix(X1).max()
+    l0[0] = 2*np.asanyarray(X1, dtype=np.float32)/max - 1
+    l1 = sigmoid(np.dot(l0, w0))
     return l1[0][0] #since process X1[0] output would be l2[0]
 
 test_dataset=[1,9,19,33,16,2,1]
