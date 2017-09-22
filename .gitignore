@@ -1,2 +1,3 @@
 .idea
 notMNIST*
+covnet/cifar-10-batches-py/
