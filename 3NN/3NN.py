@@ -45,11 +45,16 @@ def predict(X1):
     l0[0] = 2*np.asanyarray(X1, dtype=np.float32)/max - 1
     l1 = sigmoid(np.dot(l0, w0))
     l2 = sigmoid(np.dot(l1, w1))
-    return l2[0] #since process X1[0] output would be l2[0]
+    return l2[0][0] #since process X1[0] output would be l2[0]
 
 test_dataset=[1,9,19,33,16,2,1]
-
 result = predict(test_dataset)
-print("Output of example should be:" + repr(result))
+print("expected output 1, predicted output " + repr(result))
+assert (result > 0.95), "Test Failed. Exepected result > 0.95"
+
+test_dataset=[1,0, 1, 4, 1,3,1]
+result = predict(test_dataset)
+print("expected output 0, predicted output " + repr(result))
+assert (result < 0.95), "Test Failed. Exepected result < 0.95"
 
 
