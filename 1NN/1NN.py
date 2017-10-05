@@ -6,7 +6,7 @@ def sigmoid(x, deriv=False):
     return 1/(1 + np.exp(-x))
 
 #input data, each column represent a dif neuron
-X = 2*np.loadtxt("1NN/X.txt",delimiter=",")/30 - 1
+X = np.loadtxt("1NN/X.txt",delimiter=",")/30 
 #output, are the one-hot encoded labels
 y = np.loadtxt("1NN/Y.txt",delimiter=",").reshape(X.__len__(),1)
 
@@ -15,7 +15,7 @@ np.random.seed(1) # The seed for the random generator is set so that it will ret
 # Now we intialize the weights to random values. w0 is the weight between the input layer and the hidden layer.
 
 #synapses
-w0 = 2*np.random.random((X.size/X.__len__(),X.__len__())) - 1  # mxn matrix of weights 
+w0 = np.random.random((X.size/X.__len__(),X.__len__()))   # mxn matrix of weights
 
 # This is the main training loop. The output shows the evolution of the error between the model and desired. The error steadily decreases.
 for j in xrange(60000):
