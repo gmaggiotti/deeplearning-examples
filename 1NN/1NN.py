@@ -12,7 +12,7 @@ def tanh(x, deriv=False):
 
 
 #input data, each column represent a dif neuron
-X = np.loadtxt("1NN/X.txt",delimiter=",")/30 
+X = 2*np.loadtxt("1NN/X.txt",delimiter=",")/30 - 1
 #output, are the one-hot encoded labels
 y = np.loadtxt("1NN/Y.txt",delimiter=",").reshape(X.__len__(),1)
 
@@ -21,7 +21,7 @@ np.random.seed(1) # The seed for the random generator is set so that it will ret
 # Now we intialize the weights to random values. w0 is the weight between the input layer and the hidden layer.
 
 #synapses
-w0 = np.random.random((X.size/X.__len__(),X.__len__()))   # mxn matrix of weights
+w0 = 2*np.random.random((X.size/X.__len__(),X.__len__())) - 1   # mxn matrix of weights
 
 # This is the main training loop. The output shows the evolution of the error between the model and desired. The error steadily decreases.
 for j in xrange(60000):
@@ -43,7 +43,7 @@ print("Output after training")
 print(l1)
 
 def predict(X1):
-    l0 = np.zeros((X.__len__(),X.size/X.__len__()))
+    l0 = 2*np.zeros((X.__len__(),X.size/X.__len__())) - 1
     max = np.matrix(X1).max()
     l0[0] = 2*np.asanyarray(X1, dtype=np.float32)/max - 1
     l1 = sigmoid(np.dot(l0, w0))
