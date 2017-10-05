@@ -5,6 +5,12 @@ def sigmoid(x, deriv=False):
         return x*(1-x)
     return 1/(1 + np.exp(-x))
 
+def tanh(x, deriv=False):
+    if(deriv == True):
+        return 1 - np.power(x,2)
+    return np.tanh(x)   #(np.exp(x) - np.exp(-x))/(np.exp(x) + np.exp(-x))
+
+
 #input data, each column represent a dif neuron
 X = np.loadtxt("1NN/X.txt",delimiter=",")/30 
 #output, are the one-hot encoded labels
