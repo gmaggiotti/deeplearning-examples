@@ -39,14 +39,14 @@ for j in xrange(60000):
     #update weights (no learning rate term)
     w0 += X.T.dot(adjustment)
 
-print("Output after training")
-print(l1)
 
 def predict(X1):
     l0 = 2*np.zeros((X.__len__(),X.size/X.__len__())) - 1
     max = np.matrix(X1).max()
     l0[0] = 2*np.asanyarray(X1, dtype=np.float32)/max - 1
     l1 = sigmoid(np.dot(l0, w0))
+    print("Output after training")
+    print(l1)
     return l1[0][0] #since process X1[0] output would be l2[0]
 
 test_dataset=[1,9,19,33,16,2,1]
