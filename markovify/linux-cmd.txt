@@ -1,0 +1,8 @@
+#substract tokens within a corpus
+tr -sc 'A-Za-z' '\n' < parrafo1.txt
+tr -sc 'A-Za-z' '\n' < parrafo1.txt | sort | uniq -c
+
+#sort in freq
+tr -sc 'A-Za-z' '\n' < parrafo1.txt | sort | uniq -c | sort -n -r
+
+tr 'A-Z' 'a-z' < parrafo1.txt | tr -sc 'A-Za-z' '\n'| sort | uniq -c | sort -n -r
