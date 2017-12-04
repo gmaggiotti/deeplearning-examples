@@ -1,3 +1,9 @@
+text8*
+got/
+sports-6k/
+*.w2v
+.ipynb_checkpoints/
+*.pkl
 *.zip
 .idea
 notMNIST*
