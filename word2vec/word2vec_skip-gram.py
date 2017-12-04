@@ -25,7 +25,7 @@ def maybe_download(filename, expected_bytes):
             'Failed to verify ' + filename + '. Can you get to it with a browser?')
     return filename
 
-filename = maybe_download('text8.zip', 31344016)
+filename = 'text8.zip' #maybe_download('text8.zip', 31344016)
 
 
 ###  Read data into string
@@ -197,7 +197,8 @@ with tf.Session(graph=graph) as session:
                 print(log)
     final_embeddings = normalized_embeddings.eval()
 
-num_points = 400
-tsne = TSNE(perplexity=30, n_components=2, init='pca', n_iter=5000, method='exact')
-two_d_embeddings = tsne.fit_transform(final_embeddings[1:num_points+1, :])
 
+### Save final_embeddings into pickle format
+import cPickle as pickle
+with open('embeddings-es.pkl','wb') as fp:
+    pickle.dump((final_embeddings,dictionary,reverse_dictionary),fp,-1)
