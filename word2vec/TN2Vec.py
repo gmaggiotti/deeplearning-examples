@@ -48,7 +48,7 @@ raw_sentences = tokenizer.tokenize(corpus_raw)
 #list of words
 def sentence_to_wordlist(raw):
     regex = u"[^a-zA-Z-Záéíóúñ]"
-    clean = re.sub(regex," ", raw).encode("utf-8")
+    clean = re.sub(regex," ", raw).encode("utf-8").lower()
     words = clean.split()
     return words
 
@@ -86,7 +86,7 @@ min_word_count = 3
 num_workers = multiprocessing.cpu_count()
 
 # Context window length.
-context_size = 7
+context_size = 14
 
 # Downsample setting for frequent words.
 #0 - 1e-5 is good for this
@@ -97,7 +97,7 @@ downsampling = 1e-3
 #deterministic, good for debugging
 seed = 1
 
-thrones2vec = w2v.Word2Vec(
+model = w2v.Word2Vec(
     sg=1,
     seed=seed,
     workers=num_workers,
@@ -107,11 +107,11 @@ thrones2vec = w2v.Word2Vec(
     sample=downsampling
 )
 
-thrones2vec.build_vocab(sentences)
+model.build_vocab(sentences)
 
 ### Start training, this might take a minute or two...
-thrones2vec.train(sentences, total_examples=thrones2vec.corpus_count, epochs=thrones2vec.iter)
+model.train(sentences, total_examples=model.corpus_count, epochs=model.iter)
 
 ### Save the file
-thrones2vec.save("tn2vec.w2v")
+model.save("tn2vec.w2v")
 
