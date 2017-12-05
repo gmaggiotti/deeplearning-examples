@@ -8,8 +8,11 @@ with open('embeddings.pkl', 'rb') as fp:
 
 ### Nearest 8 neighbors
 
-word='the'
-word_vec = final_embeddings[dictionary[word]]
-sim = np.dot(word_vec, -final_embeddings.T).argsort()[0:8]
-for idx in range(8):
-    print reverse_dictionary[sim[idx]]
+def similarity(word):
+    word='the'
+    word_vec = final_embeddings[dictionary[word]]
+    sim = np.dot(word_vec, -final_embeddings.T).argsort()[0:8]
+    for idx in range(8):
+        print reverse_dictionary[sim[idx]]
+
+similarity('the')
