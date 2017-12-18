@@ -60,7 +60,7 @@ for raw_sentence in raw_sentences:
 
 ### Print raw sentences,  after being curated and corpus size
 print(raw_sentences[5])
-print(sentence_to_wordlist(raw_sentences[5]))
+print(sentence_to_wordlist(raw_sentences[5]))w
 token_count = sum([len(sentence) for sentence in sentences])
 print("The book corpus contains {0:,} tokens".format(token_count))
 

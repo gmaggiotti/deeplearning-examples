@@ -23,7 +23,7 @@ print model.similarity("river","river")
 
 nearest_similarity_cosmul("boca", "river", "millonario")
 
-input = model.wv['river']
-sim = np.dot(model.wv['river'], -model.wv.syn0norm.T).argsort()[0:8]
+input = model.wv['niño']
+sim = np.dot(model.wv['niño'], -model.wv.syn0norm.T).argsort()[0:8]
 for idx in range(8):
     print model.wv.index2word[sim[idx]]
