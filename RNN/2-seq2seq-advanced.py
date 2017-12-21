@@ -97,7 +97,7 @@ def loop_fn_transition(time, previous_output, previous_state, previous_loop_stat
     def get_next_input():
         #dot product between previous ouput and weights, then + biases
         output_logits = tf.add(tf.matmul(previous_output, W), b)
-
+        # THIS IS ATTENTION
         prediction = tf.argmax(output_logits, axis=1)
         #embed prediction for the next input
         next_input = tf.nn.embedding_lookup(embeddings, prediction)
@@ -154,7 +154,9 @@ stepwise_cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
 loss = tf.reduce_mean(stepwise_cross_entropy)
 train_op = tf.train.AdamOptimizer().minimize(loss)
 
+###
 
+saver = tf.train.Saver()
 sess.run(tf.global_variables_initializer())
 
 
@@ -204,9 +206,8 @@ try:
                 if i >= 2:
                     break
             print()
+    saver.save(sess, './model_final/trained_variables.ckpt')
 
 except KeyboardInterrupt:
     print('training interrupted')
 
-
-#
