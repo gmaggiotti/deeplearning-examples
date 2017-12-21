@@ -184,6 +184,16 @@ def next_feed():
         decoder_targets: decoder_targets_,
     }
 
+def input_string( str ):
+    encoder_inputs_, encoder_input_lengths_ = helpers.batch(str)
+    decoder_targets_, _ = helpers.batch(
+        [(sequence) + [EOS] + [PAD] * 2 for sequence in str]
+    )
+    return {
+        encoder_inputs: encoder_inputs_,
+        encoder_inputs_length: encoder_input_lengths_,
+        decoder_targets: decoder_targets_,
+    }
 
 loss_track = []
 max_batches = 3001
@@ -207,6 +217,11 @@ try:
                     break
             print()
     saver.save(sess, './model_final/trained_variables.ckpt')
+    inp = [ [7, 3, 2, 6, 6, 5, 6, 2] ]
+    predict = sess.run(decoder_prediction, input_string(inp))
+    print "input: " + str(inp)
+    print "predicted: " + str(predict.T)
+
 
 except KeyboardInterrupt:
     print('training interrupted')
