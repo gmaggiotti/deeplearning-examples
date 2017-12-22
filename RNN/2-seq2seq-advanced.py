@@ -15,14 +15,14 @@ PAD = 0
 EOS = 1
 
 vocab_size = 10 #amount of words
-input_embedding_size = 20 #character length
+input_embedding_size = 60 #character length
 
-encoder_hidden_units = 20 #num neurons
+encoder_hidden_units = 60 #num neurons
 decoder_hidden_units = encoder_hidden_units * 2 #in original paper, they used same number of neurons for both encoder
 
 #input placehodlers
 encoder_inputs = tf.placeholder(shape=(None, None), dtype=tf.int32, name='encoder_inputs')
-encoder_inputs_length = tf.placeholder(shape=(None), dtype=tf.int32, name='encoder_inputs_length')
+encoder_inputs_length = tf.placeholder(shape=(None,), dtype=tf.int32, name='encoder_inputs_length')
 decoder_targets = tf.placeholder(shape=(None, None), dtype=tf.int32, name='decoder_targets')
 
 #embeddings to feed the encoder
@@ -217,7 +217,7 @@ try:
                     break
             print()
     saver.save(sess, './model_final/trained_variables.ckpt')
-    inp = [ [7, 3, 2, 6, 6, 5, 6, 2] ]
+    inp = [ [7, 3, 2, 6, 6, 5, 0, 0] ]
     predict = sess.run(decoder_prediction, input_string(inp))
     print "input: " + str(inp)
     print "predicted: " + str(predict.T)
