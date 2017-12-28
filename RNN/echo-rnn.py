@@ -13,10 +13,10 @@ num_batches = total_series_length//batch_size//truncated_backprop_length
 def generateData():
     x = np.array(np.random.choice(2, total_series_length, p=[0.5, 0.5]))
     y = np.roll(x, echo_step)
-    y[0:echo_step] = 0
+    #y[0:echo_step] = 0
     x = x.reshape((batch_size, -1))  # The first index changing slowest, subseries as rows
     y = y.reshape((batch_size, -1))
-
+    y[:,:echo_step] = 0
     return (x, y)
 
 ### tf data structure
@@ -53,6 +53,12 @@ total_loss = tf.reduce_mean(losses)
 #Optimizing
 train_step = tf.train.AdagradOptimizer(0.3).minimize(total_loss)
 
+
+def get_prediction(_predictions_series):
+    one_hot_output_series = np.array(_predictions_series)[:, 0, :]
+    single_output_series = np.array([(1 if out[0] < 0.5 else 0) for out in one_hot_output_series])
+    return single_output_series
+
 #running training
 with tf.Session() as sess:
     sess.run(tf.initialize_all_variables())
@@ -81,5 +87,8 @@ with tf.Session() as sess:
 
             loss_list.append(_total_loss)
 
-            if batch_idx%100 == 0:
+            if batch_idx%1000 == 0:
                 print("Step",batch_idx, "Loss", _total_loss)
+                print batchX[0]
+                print batchY[0]
+                print get_prediction(_predictions_series)
