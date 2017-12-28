@@ -475,14 +475,9 @@ def main(_):
 
     for name, model in models.items():
       model.export_ops(name)
+
     metagraph = tf.train.export_meta_graph()
-    if tf.__version__ < "1.1.0" and FLAGS.num_gpus > 1:
-      raise ValueError("num_gpus > 1 is not supported for TensorFlow versions "
-                       "below 1.1.0")
     soft_placement = False
-    if FLAGS.num_gpus > 1:
-      soft_placement = True
-      util.auto_parallel(metagraph, m)
 
   with tf.Graph().as_default():
     tf.train.import_meta_graph(metagraph)
