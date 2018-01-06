@@ -29,7 +29,7 @@ b = tf.Variable(np.zeros((1,state_size)), dtype=tf.float32)
 W2 = tf.Variable(np.random.rand(state_size, num_classes),dtype=tf.float32)
 b2 = tf.Variable(np.zeros((1,num_classes)), dtype=tf.float32)
 
-# Unpack columns
+# Unpack columns slicing axis=1 => [:,i]
 inputs_series = tf.unstack(batchX_placeholder, axis=1)
 labels_series = tf.unstack(batchY_placeholder, axis=1)
 
