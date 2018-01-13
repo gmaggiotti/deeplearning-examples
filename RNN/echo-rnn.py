@@ -33,7 +33,7 @@ b2 = tf.Variable(np.zeros((1,num_classes)), dtype=tf.float32)
 inputs_series = tf.unstack(batchX_placeholder, axis=1)
 labels_series = tf.unstack(batchY_placeholder, axis=1)
 
-#Forward pass
+#Forward pass;  input(inputs_series, init_state)
 current_state = init_state
 states_series = []
 for current_input in inputs_series:
