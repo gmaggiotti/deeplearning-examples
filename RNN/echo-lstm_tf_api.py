@@ -13,16 +13,18 @@ num_batches = total_series_length//batch_size//truncated_backprop_length
 def generateData():
     x = np.array(np.random.choice(2, total_series_length, p=[0.5, 0.5]))
     y = np.roll(x, echo_step)
-    #y[0:echo_step] = 0
+    y[0:echo_step] = 0
     x = x.reshape((batch_size, -1))  # The first index changing slowest, subseries as rows
     y = y.reshape((batch_size, -1))
-    y[:,:echo_step] = 0
     return (x, y)
 
 ### tf data structure
 batchX_placeholder = tf.placeholder(tf.float32, [batch_size, truncated_backprop_length])
 batchY_placeholder = tf.placeholder(tf.int32, [batch_size, truncated_backprop_length])
-init_state = tf.placeholder(tf.float32, [batch_size, state_size])
+
+cell_state = tf.placeholder(tf.float32, [batch_size, state_size])
+hidden_state = tf.placeholder(tf.float32, [batch_size, state_size])
+init_state = tf.nn.rnn_cell.LSTMStateTuple(cell_state, hidden_state)
 
 W2 = tf.Variable(np.random.rand(state_size, num_classes),dtype=tf.float32)
 b2 = tf.Variable(np.zeros((1,num_classes)), dtype=tf.float32)
@@ -32,7 +34,7 @@ inputs_series = tf.split(batchX_placeholder, truncated_backprop_length, 1)
 labels_series = tf.unstack(batchY_placeholder, axis=1)
 
 # Forward passes
-cell = tf.nn.rnn_cell.BasicRNNCell(state_size)
+cell = tf.nn.rnn_cell.BasicLSTMCell(state_size)
 states_series, current_state = tf.nn.static_rnn(cell, inputs_series, init_state)
 
 #Calculating loss
@@ -56,7 +58,8 @@ with tf.Session() as sess:
 
     for epoch_idx in range(num_epochs):
         x,y = generateData()
-        _current_state = np.zeros((batch_size, state_size))
+        _current_cell_state = np.zeros((batch_size, state_size))
+        _current_hidden_state = np.zeros((batch_size, state_size))
 
         print("New data, epoch", epoch_idx)
 
@@ -72,9 +75,11 @@ with tf.Session() as sess:
                 feed_dict={
                     batchX_placeholder:batchX,
                     batchY_placeholder:batchY,
-                    init_state:_current_state
+                    cell_state: _current_cell_state,
+                    hidden_state: _current_hidden_state
                 })
 
+            _current_cell_state, _current_hidden_state = _current_state
             loss_list.append(_total_loss)
 
             if batch_idx%1000 == 0:
