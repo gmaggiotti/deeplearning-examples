@@ -23,11 +23,10 @@ def generateData():
 batchX_placeholder = tf.placeholder(tf.float32, [batch_size, truncated_backprop_length])
 batchY_placeholder = tf.placeholder(tf.int32, [batch_size, truncated_backprop_length])
 
-# cell_state = tf.placeholder(tf.float32, [batch_size, state_size])
-# hidden_state = tf.placeholder(tf.float32, [batch_size, state_size])
-# init_state = tf.nn.rnn_cell.LSTMStateTuple(cell_state, hidden_state)
 init_state = tf.placeholder(tf.float32, [num_layers, 2, batch_size, state_size])
+
 state_per_layer_list = tf.unstack(init_state, axis=0)
+
 rnn_tuple_state = tuple(
     [tf.nn.rnn_cell.LSTMStateTuple(state_per_layer_list[idx][0], state_per_layer_list[idx][1])
      for idx in range(num_layers)]
@@ -41,8 +40,6 @@ inputs_series = tf.split(batchX_placeholder, truncated_backprop_length, 1)
 labels_series = tf.unstack(batchY_placeholder, axis=1)
 
 # Forward passes
-# cell = tf.nn.rnn_cell.BasicLSTMCell(state_size)
-# states_series, current_state = tf.nn.static_rnn(cell, inputs_series, init_state)
 stacked_rnn = []
 for _ in range(num_layers):
     stacked_rnn.append(tf.nn.rnn_cell.LSTMCell(state_size, state_is_tuple=True))
