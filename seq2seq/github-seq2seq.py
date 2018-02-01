@@ -77,44 +77,6 @@ def get_idx(vocab):
 #   word2idx['the']=45 => idx2word[45]=['the']
 word2idx, idx2word = get_idx(vocab)
 
-# build a lookup table of index of outside words to index of inside words
-Y = []
-for headline in heads:
-        y = []
-        for token in polish_sentence(headline).split():
-            try:
-                y.append( word2idx[token] )
-            except:
-                print('word skipped')
-        Y.append(y)
-
-
-X = []
-for d in desc:
-    x = []
-    for token in polish_sentence(headline).split():
-        try:
-            x.append( word2idx[token] )
-        except:
-            print('word skipped')
-    X.append(x)
-print('EOF')
-
-# # Pre-Process Data For Deep Learning
-# from ktext.preprocess import processor
-# train_body_raw = traindf.body.tolist()
-# train_title_raw = traindf.issue_title.tolist()
-# # instantiate data processing object
-# body_pp = processor(keep_n=8000, padding_maxlen=70)
-# # process data
-# train_body_vecs = body_pp.fit_transform(train_body_raw)
-#
-# # Look at one example of processed issue bodies
-# print('\noriginal string:\n', train_body_raw[0], '\n')
-# print('after pre-processing:\n', train_body_vecs[0], '\n')
-
-
-
 def lpadd(x, maxlend=maxlend, eos=eos):
     """left (pre) pad a description to maxlend and then add eos.
     The eos is the input to predicting the first word in the headline
@@ -127,3 +89,31 @@ def lpadd(x, maxlend=maxlend, eos=eos):
         x = x[-maxlend:]
         n = maxlend
     return [empty]*(maxlend-n) + x + [eos]
+
+# build a lookup table of index of outside words to index of inside words
+Y = []
+for headline in heads:
+        y = []
+        for token in polish_sentence(headline).split():
+            try:
+                y.append( word2idx[token] )
+            except:
+                print('word skipped')
+        Y.append( lpadd( y ) )
+
+
+X = []
+for d in desc:
+    x = []
+    for token in polish_sentence(headline).split():
+        try:
+            x.append( word2idx[token] )
+        except:
+            print('word skipped')
+    X.append( lpadd( x ) )
+print('EOF')
+
+
+
+
+
