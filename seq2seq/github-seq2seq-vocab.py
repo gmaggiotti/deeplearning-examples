@@ -36,7 +36,7 @@ with open('github_issues.pkl', 'rb') as fp:
 print('Train',train_dataset.shape)
 print('Test',test_dataset.shape)
 
-link, heads, desc = train_dataset.reshape( (-1,2000) )
+link, desc, heads = train_dataset.reshape( (-1,2000) )
 print('heads:', heads.shape )
 print('desc:', desc.shape )
 
@@ -94,7 +94,7 @@ def lpadd(x, maxlend=maxlend, eos=eos):
 Y = []
 for headline in heads:
         y = []
-        for token in polish_sentence(headline).split():
+        for token in polish_sentence( headline ).split():
             try:
                 y.append( word2idx[token] )
             except:
@@ -105,13 +105,18 @@ for headline in heads:
 X = []
 for d in desc:
     x = []
-    for token in polish_sentence(headline).split():
+    for token in polish_sentence( d ).split():
         try:
             x.append( word2idx[token] )
         except:
             print('word skipped')
     X.append( lpadd( x ) )
-print('EOF')
+
+with open('github_issues-bundle.pkl','wb') as fp:
+    pickle.dump((X,Y, idx2word, word2idx),fp,-1)
+
+print('EOP')
+
 
 
 
