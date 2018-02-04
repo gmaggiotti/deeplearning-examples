@@ -99,7 +99,9 @@ for headline in heads:
                 y.append( word2idx[token] )
             except:
                 print('word skipped')
-        Y.append( lpadd( y ) )
+        # For Decoder Input, you don't need the last word as that is only for prediction
+        # when we are training using Teacher Forcing.
+        Y.append( lpadd( y[:-1] ) )
 
 
 X = []
