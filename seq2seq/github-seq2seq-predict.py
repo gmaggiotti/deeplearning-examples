@@ -12,7 +12,7 @@ with open('github_issues-bundle.pkl', 'rb') as fp:
 latent_dim = 300
 num_encoder_tokens = num_decoder_tokens = len(X)
 batch_size = 1200
-epochs = 2 #change to 7 in prod
+epochs = 7
 ##### Define Model Architecture ######
 
 ########################
@@ -83,5 +83,4 @@ history = seq2seq_Model.fit([X, Y], np.expand_dims(decoder_target_data, -1),
                             epochs=epochs,
                             validation_split=0.12, callbacks=[csv_logger, model_checkpoint])
 
-seq2seq_Model.save('seq2seq_model_keras.h5')
 print('EOP')

@@ -14,8 +14,8 @@ empty = 0; eos = 1; unknown = 2
 maxlend=25; maxlenh=25
 start_idx = eos+1 # first real word
 maxlen = maxlend + maxlenh
-sample_size = 2000
-vocab_size = 500
+sample_size = 2000  #change to 2M in prod
+vocab_size = 500  #change to 8k or more in prod
 
 
 if not os.path.exists('github_issues.pkl'):
