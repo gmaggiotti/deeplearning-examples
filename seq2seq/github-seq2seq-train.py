@@ -17,7 +17,7 @@ epochs = 2 #change to 7 in prod
 
 ########################
 #### Encoder Model ####
-encoder_inputs = Input(shape=(26,), name='Encoder-Input')
+encoder_inputs = Input(shape=(27,), name='Encoder-Input')
 
 # Word embeding for encoder (ex: Issue Body)
 x = Embedding(num_encoder_tokens, latent_dim, name='Body-Word-Embedding', mask_zero=False)(encoder_inputs)

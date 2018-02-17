@@ -10,7 +10,7 @@ pd.set_option('display.max_colwidth', 500)
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
 
-empty = 0; eos = 1; unknown = 2
+empty = 0; eos = 1; unknown = 2; start = 3
 maxlend=25; maxlenh=25
 start_idx = eos+1 # first real word
 maxlen = maxlend + maxlenh
@@ -76,6 +76,7 @@ def get_idx(vocab):
     word2idx['<empty>'] = empty
     word2idx['<eos>'] = eos
     word2idx['<unk>'] = unknown
+    word2idx['<start>'] = unknown
     idx2word = dict((idx,word) for word,idx in word2idx.iteritems())
     return word2idx, idx2word
 
@@ -92,9 +93,9 @@ def lpadd(x, maxlend=maxlend, eos=eos):
         return [eos]
     n = len(x)
     if n > maxlend:
-        x = x[-maxlend:]
+        x = x[-(maxlend):]
         n = maxlend
-    return [empty]*(maxlend-n) + x + [eos]
+    return [empty]*(maxlend-n) + [start]+ x + [eos]
 
 # build a lookup table of index of outside words to index of inside words
 Y = []

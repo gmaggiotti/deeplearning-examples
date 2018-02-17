@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+https://github.com/ematvey/tensorflow-seq2seq-tutorials/blob/master/1-seq2seq.ipynb
 
 import numpy as np #matrix math 
 import tensorflow as tf #machine learningt
