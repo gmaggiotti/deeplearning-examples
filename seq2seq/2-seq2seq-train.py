@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-https://github.com/ematvey/tensorflow-seq2seq-tutorials/blob/master/1-seq2seq.ipynb
+# https://github.com/ematvey/tensorflow-seq2seq-tutorials/blob/master/1-seq2seq.ipynb
 
 import numpy as np #matrix math 
 import tensorflow as tf #machine learningt
@@ -155,13 +155,12 @@ stepwise_cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
 loss = tf.reduce_mean(stepwise_cross_entropy)
 train_op = tf.train.AdamOptimizer().minimize(loss)
 
-###
+
+### Training on the toy task
 
 saver = tf.train.Saver()
 sess.run(tf.global_variables_initializer())
 
-
-# ## Training on the toy task
 batch_size = 100
 batches = helpers.random_sequences(length_from=3, length_to=8,
                                    vocab_lower=2, vocab_upper=10,
@@ -217,7 +216,7 @@ try:
                 if i >= 2:
                     break
             print()
-    saver.save(sess, './model_final/trained_variables.ckpt')
+    saver.save(sess, './model_final/2-seq2seq-advance-decoder_prediction.ckpt')
     inp = [ [7, 3, 2, 6, 6, 5, 0, 0] ]
     predict = sess.run(decoder_prediction, input_string(inp))
     print "input: " + str(inp)
