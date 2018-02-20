@@ -10,8 +10,8 @@ logits = tf.matmul(x,W) + b
 out = tf.reduce_mean( tf.sigmoid(logits) )
 
 loss = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits( logits=logits, labels=y))
-learning_rate = 0.02
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(loss)
+LR = 0.02
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=LR).minimize(loss)
 
 
 init = tf.global_variables_initializer()
@@ -20,8 +20,8 @@ sess.run(init)
 
 x_data = [[1.0,2.0],[1.0,2.0],[3.0,2.0]]
 y_data = [[1.0], [2.0], [5.0]]
-for epoch in range(100001):
-    if epoch % 10000 == 0:
+for epoch in range(500001):
+    if epoch % 50000 == 0:
         sess.run(optimizer, feed_dict={x:x_data, y:y_data })
         l, o = sess.run([loss, out], feed_dict={x:x_data, y:y_data })
         print 'loss: ', l, ' error:', 1 - o
