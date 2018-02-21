@@ -21,7 +21,7 @@ np.random.seed(1) # The seed for the random generator is set so that it will ret
 # Now we intialize the weights to random values. w0 is the weight between the input layer and the hidden layer.
 
 #synapses
-w0 = 2*np.random.random((X.size/X.__len__(),X.__len__())) - 1   # mxn matrix of weights
+w0 = 2*np.random.random((X.size/X.__len__(),1)) - 1   # mxn matrix of weights
 
 # This is the main training loop. The output shows the evolution of the error between the model and desired. The error steadily decreases.
 for j in xrange(60000):
