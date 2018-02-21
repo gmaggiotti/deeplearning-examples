@@ -21,8 +21,15 @@ init = tf.global_variables_initializer()
 sess = tf.InteractiveSession() #initializes a tensorflow session
 sess.run(init)
 
-x_data = [[1.0, 2.0, 3.0], [0.0, 0, 0], [3.0, 2.0, 1.0]]
-y_data = [[1.0], [0], [1.0]]
+x_data = [
+    [7.0, 2.0, 3.0],
+    [0.0, 0.0, 0.0],
+    [9.0, 6.0, 5.0],
+    [1.0, 1,0, 0.0]
+]
+
+y_data = [[1.0], [0], [1.0], [0.0]]
+
 for epoch in range(1000001):
     if epoch % 50000 == 0:
         ### run the optimizer
