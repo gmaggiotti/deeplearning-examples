@@ -6,9 +6,7 @@ sess = tf.InteractiveSession() #initializes a tensorflow session
 a = tf.placeholder(dtype=tf.float32)
 b = tf.placeholder(dtype=tf.float32)
 c = tf.add(a,b)
+d = tf.multiply(a,b)
 
-res =sess.run(tf.global_variables_initializer())
-print(res)
-
-res = sess.run(c, feed_dict={a:2.0, b:3.0})
+res = sess.run([c,d], feed_dict={a:2.0, b:3.0})
 print(res)
