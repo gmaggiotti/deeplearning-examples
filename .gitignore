@@ -1,3 +1,4 @@
+tensorboard_log/
 *.log
 *.h5
 *f5
