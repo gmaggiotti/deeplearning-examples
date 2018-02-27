@@ -45,9 +45,9 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())     #init W & b
     for epoch in range(epochs):
         ### run the optimizer
-        l1_, opt, lo = sess.run([l2,optimizer, loss], feed_dict={x: X, y: Y})
+        l2_, opt, lo = sess.run([l2,optimizer, loss], feed_dict={x: X, y: Y})
         if epoch % 100 == 0:
-            print "error: " , np.mean(np.abs( Y - l1_ ))
+            print "error: " , np.mean(np.abs( Y - l2_ ))
 
     print "y_prime: ",np.round(sess.run(l2, feed_dict={x: X,y: Y }))
 
