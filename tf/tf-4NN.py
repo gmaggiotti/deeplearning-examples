@@ -22,17 +22,19 @@ samples = X.shape[0]
 x = tf.placeholder(tf.float32, shape=[samples, neurons])
 y = tf.placeholder(tf.float32, shape=[samples, 1])
 
-W0 = tf.Variable(tf.random_normal([neurons, samples], seed=0), name="W", dtype=tf.float32)
-b0 = tf.Variable(tf.zeros([samples, 1]), name="bias", dtype=tf.float32)
-W1 = tf.Variable(tf.random_normal([samples, 1], seed=0), name="W", dtype=tf.float32)
-b1 = tf.Variable(tf.zeros([samples, 1]), name="bias", dtype=tf.float32)
+W0 = tf.Variable(tf.truncated_normal([neurons, samples], seed=0), name="W0", dtype=tf.float32)
+b0 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias", dtype=tf.float32)
+W1 = tf.Variable(tf.truncated_normal([samples, samples], seed=0), name="W1", dtype=tf.float32)
+b1 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias", dtype=tf.float32)
+W2 = tf.Variable(tf.truncated_normal([samples, 1], seed=0), name="W2", dtype=tf.float32)
+b2 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias", dtype=tf.float32)
 
-l0 = tf.sigmoid(tf.matmul(x, W0) + b0 )
-l1 = tf.sigmoid(tf.matmul(l0, W1) + b1 )
-
+l0 = tf.sigmoid(tf.add(tf.matmul(x, W0), b0))
+l1 = tf.sigmoid(tf.add(tf.matmul(l0, W1), b1))
+l2 = tf.matmul(l1, W2) + b2
 
 ### calculate the error
-loss = tf.reduce_mean( tf.nn.softmax_cross_entropy_with_logits( logits=l1, labels=y))
+loss = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits( logits=l2, labels=y))
 
 
 ### run the optimization
@@ -47,7 +49,7 @@ with tf.Session() as sess:
         if epoch % 100 == 0:
             print "error: " , np.mean(np.abs( Y - l1_ ))
 
-    print "y_prime: ",np.round(sess.run(l1, feed_dict={x: X,y: Y }))
+    #print "y_prime: ",np.round(sess.run(l2, feed_dict={x: X,y: Y }))
 
     print('EOC')
 
