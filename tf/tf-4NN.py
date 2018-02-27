@@ -23,11 +23,11 @@ x = tf.placeholder(tf.float32, shape=[samples, neurons])
 y = tf.placeholder(tf.float32, shape=[samples, 1])
 
 W0 = tf.Variable(tf.truncated_normal([neurons, samples], seed=0), name="W0", dtype=tf.float32)
-b0 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias", dtype=tf.float32)
+b0 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias0", dtype=tf.float32)
 W1 = tf.Variable(tf.truncated_normal([samples, samples], seed=0), name="W1", dtype=tf.float32)
-b1 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias", dtype=tf.float32)
+b1 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias1", dtype=tf.float32)
 W2 = tf.Variable(tf.truncated_normal([samples, 1], seed=0), name="W2", dtype=tf.float32)
-b2 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias", dtype=tf.float32)
+b2 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias2", dtype=tf.float32)
 
 l0 = tf.sigmoid(tf.add(tf.matmul(x, W0), b0))
 l1 = tf.sigmoid(tf.add(tf.matmul(l0, W1), b1))
@@ -45,11 +45,11 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())     #init W & b
     for epoch in range(epochs):
         ### run the optimizer
-        l1_, opt, lo = sess.run([l1,optimizer, loss], feed_dict={x: X, y: Y})
+        l1_, opt, lo = sess.run([l2,optimizer, loss], feed_dict={x: X, y: Y})
         if epoch % 100 == 0:
             print "error: " , np.mean(np.abs( Y - l1_ ))
 
-    #print "y_prime: ",np.round(sess.run(l2, feed_dict={x: X,y: Y }))
+    print "y_prime: ",np.round(sess.run(l2, feed_dict={x: X,y: Y }))
 
     print('EOC')
 
