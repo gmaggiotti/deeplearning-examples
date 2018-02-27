@@ -36,9 +36,9 @@ with tf.Session() as sess:
 
     for epoch in range(1000):
         ### run the optimizer
-        opt, lo = sess.run([optimizer, loss], feed_dict={x: x_data, y: y_data})
+        logits_, opt, lo = sess.run([logits,optimizer, loss], feed_dict={x: x_data, y: y_data})
         if epoch % 100 == 0:
-            print lo
+            print "error: " , np.mean(np.abs( y_data - logits_ ))
 
     print "y_prime: ",sess.run(logits, feed_dict={x: x_data,y: y_data })
 
