@@ -32,7 +32,7 @@ l1 = tf.sigmoid(tf.matmul(l0, W1) + b1 )
 
 
 ### calculate the error
-loss = tf.reduce_mean( tf.nn.softmax_cross_entropy_with_logits( logits=l1, labels=y))
+loss = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits( logits=l1, labels=y))
 
 
 ### run the optimization

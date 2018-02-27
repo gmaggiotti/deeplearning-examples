@@ -13,7 +13,7 @@ def read_dataset():
     return shuffle(X, Y, random_state=0)
 
 X,Y = read_dataset()
-LR = 0.3
+LR = 0.03
 epochs = 1000
 neurons = X.shape[1]
 samples = X.shape[0]
@@ -31,7 +31,7 @@ b2 = tf.Variable(tf.truncated_normal([samples, 1]), name="bias", dtype=tf.float3
 
 l0 = tf.sigmoid(tf.add(tf.matmul(x, W0), b0))
 l1 = tf.sigmoid(tf.add(tf.matmul(l0, W1), b1))
-l2 = tf.matmul(l1, W2) + b2
+l2 = tf.sigmoid(tf.matmul(l1, W2) + b2)
 
 ### calculate the error
 loss = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits( logits=l2, labels=y))
