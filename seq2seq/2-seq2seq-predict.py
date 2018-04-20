@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# https://github.com/ematvey/tensorflow-seq2seq-tutorials/blob/master/1-seq2seq.ipynb
+# https://github.com/ematvey/tensorflow-seq2seq-tutorials
 
 import numpy as np #matrix math 
 import tensorflow as tf #machine learningt
@@ -128,12 +128,6 @@ def loop_fn(time, previous_output, previous_state, previous_loop_state):
 decoder_outputs_ta, decoder_final_state, _ = tf.nn.raw_rnn(decoder_cell, loop_fn)
 decoder_outputs = decoder_outputs_ta.stack()
 
-
-
-decoder_outputs
-
-
-
 #to convert output to human readable prediction
 decoder_max_steps, decoder_batch_size, decoder_dim = tf.unstack(tf.shape(decoder_outputs))
 #flettened output tensor
@@ -144,7 +138,6 @@ decoder_logits_flat = tf.add(tf.matmul(decoder_outputs_flat, W), b)
 decoder_logits = tf.reshape(decoder_logits_flat, (decoder_max_steps, decoder_batch_size, vocab_size))
 #final prediction
 decoder_prediction = tf.argmax(decoder_logits, 2)
-
 
 
 

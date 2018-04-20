@@ -8,7 +8,6 @@ import helpers #for formatting data into batches and generating random sequence 
 tf.reset_default_graph() #Clears the default graph stack and resets the global default graph.
 sess = tf.InteractiveSession() #initializes a tensorflow session
 
-
 print tf.__version__
 
 
@@ -157,7 +156,7 @@ train_op = tf.train.AdamOptimizer().minimize(loss)
 
 
 ### Training on the toy task
-
+writer = tf.summary.FileWriter("./tensorboard_log", sess.graph)
 saver = tf.train.Saver()
 sess.run(tf.global_variables_initializer())
 
