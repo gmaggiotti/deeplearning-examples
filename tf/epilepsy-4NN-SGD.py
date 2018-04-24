@@ -9,7 +9,7 @@ batch_size = 90
 
 def read_dataset():
     path = os.path.dirname(os.path.abspath(__file__))
-    dataset = np.loadtxt(path + "/data-1k.csv", delimiter=",", skiprows=1, usecols=range(1,180))[0:num_examples]
+    dataset = np.loadtxt(path + "/data-1k.csv1", delimiter=",", skiprows=1, usecols=range(1,180))[0:num_examples]
     X = dataset[:,0:178]
     Y = dataset[:,178].reshape(X.__len__(), 1)
     Y[Y > 1] = 0
@@ -23,7 +23,7 @@ X,Y = read_dataset()
 train_x, test_x, train_y, test_y = train_test_split(X,Y,test_size=0.1, random_state=1)
 
 LR = 0.001
-epochs = 1000
+epochs = 10000
 neurons = train_x.shape[1]
 samples = train_x.shape[0]
 
