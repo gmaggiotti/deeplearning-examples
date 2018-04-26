@@ -23,7 +23,8 @@ X,Y = read_dataset()
 train_x, test_x, train_y, test_y = train_test_split(X,Y,test_size=0.1, random_state=1)
 
 LR = 0.001
-epochs = 10000
+epochs = 1000
+beta = 0.001
 neurons = train_x.shape[1]
 samples = train_x.shape[0]
 
@@ -39,8 +40,14 @@ l0 = tf.sigmoid(tf.add(tf.matmul(x, W0), b0))
 l1 = tf.sigmoid(tf.add(tf.matmul(l0, W1), b1))
 l2 = tf.sigmoid(tf.matmul(l1, W2) + b2)
 
+# L2 Variables.
+weights = tf.Variable(tf.truncated_normal([batch_size, 1], seed=5))
+biases = tf.Variable(tf.zeros([batch_size]))
+
+
 ### calculate the error
 loss = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits( logits=l2, labels=y))
+loss = tf.reduce_mean(loss + beta * tf.nn.l2_loss(l2) )
 ### run the optimization
 optimizer = tf.train.AdamOptimizer(learning_rate=LR).minimize(loss)
 
