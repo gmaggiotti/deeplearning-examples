@@ -30,6 +30,8 @@ samples = train_x.shape[0]
 
 x = tf.placeholder(tf.float32, shape=[None, neurons])
 y = tf.placeholder(tf.float32, shape=[None, 1])
+keep_prob = tf.placeholder("float")
+
 W0 = tf.Variable(tf.truncated_normal([neurons, batch_size], seed=5), name="W0", dtype=tf.float32)
 b0 = tf.Variable(tf.truncated_normal([batch_size, 1]), name="bias0", dtype=tf.float32)
 W1 = tf.Variable(tf.truncated_normal([batch_size, batch_size], seed=5), name="W1", dtype=tf.float32)
@@ -44,15 +46,17 @@ l2 = tf.sigmoid(tf.matmul(l1, W2) + b2)
 weights = tf.Variable(tf.truncated_normal([batch_size, 1], seed=5))
 biases = tf.Variable(tf.zeros([batch_size]))
 
+# add dropout on hidden layer
+hidden_layer_drop = tf.nn.dropout(l2, keep_prob)
 
 ### calculate the error
-loss = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits( logits=l2, labels=y))
+loss = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits( logits=hidden_layer_drop, labels=y))
 loss = tf.reduce_mean(loss + beta * tf.nn.l2_loss(l2) )
 ### run the optimization
 optimizer = tf.train.AdamOptimizer(learning_rate=LR).minimize(loss)
 
 def predict(X1):
-    result = sess.run(l2, feed_dict={x: X1 ,y:test_y_batch })
+    result = sess.run(l2, feed_dict={x: X1 ,y:test_y_batch, keep_prob : 0.5 })
     return result[:test_y.shape[0]]
 
 def accuracy_calc(predictions, labels):
@@ -71,7 +75,7 @@ with tf.Session() as sess:
             test_y_batch = test_y[i*batch_size:(i+1)*batch_size]
 
             ### run the optimizer
-            l2_, opt, lo = sess.run([l2,optimizer, loss], feed_dict={x: train_x_batch, y: train_y_batch})
+            l2_, opt, lo = sess.run([l2,optimizer, loss], feed_dict={x: train_x_batch, y: train_y_batch, keep_prob : 0.5})
             error += np.mean(np.abs( train_y_batch - l2_ ))
             if test_x_batch.shape[0] == batch_size:
                 accuracy += 1 - np.sum(np.abs( (predict(test_x_batch) - test_y_batch))/batch_size)
