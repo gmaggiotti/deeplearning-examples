@@ -7,7 +7,9 @@ def sigmoid(x, deriv=False):
 
 
 #input data, each column represent a dif neuron
-X = 2*np.loadtxt("4NN/train_dataset.txt",delimiter=",")/30 - 1
+X = np.loadtxt("4NN/train_dataset.txt",delimiter=",")
+max = np.matrix(X).max()
+X = 2*X/float(max) - 1
 #output, are the one-hot encoded labels
 y = np.loadtxt("4NN/label_dataset.txt",delimiter=",").reshape(X.__len__(),1)
 
@@ -56,12 +58,12 @@ def predict(X1):
     l3 = sigmoid(np.dot(l2, w2))
     return l3[0][0] #since process X1[0] output would be l2[0]
 
-test_dataset=[1,9,19,33,16,2,1]
+test_dataset=[1,9,19,43,16,2,1]
 result = predict(test_dataset)
 print("expected output 1, predicted output " + repr(result))
 assert (result > 0.95), "Test Failed. Exepected result > 0.95"
 
-test_dataset=[1,0, 1, 4, 1,3,1]
+test_dataset=[1,0, 2, 2, 3,3,1]
 result = predict(test_dataset)
 print("expected output 0, predicted output " + repr(result))
 assert (result < 0.95), "Test Failed. Exepected result < 0.95"

@@ -12,7 +12,9 @@ def tanh(x, deriv=False):
 
 
 #input data, each column represent a dif neuron
-X = 2*np.loadtxt("1NN/X.txt",delimiter=",")/30 - 1
+X = np.loadtxt("1NN/X.txt",delimiter=",")
+max = np.matrix(X).max()
+X = 2*X/float(max) - 1
 #output, are the one-hot encoded labels
 y = np.loadtxt("1NN/Y.txt",delimiter=",").reshape(X.__len__(),1)
 
