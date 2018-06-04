@@ -38,16 +38,23 @@ W1 = tf.Variable(tf.truncated_normal([batch_size, batch_size], seed=5), name="W1
 b1 = tf.Variable(tf.truncated_normal([batch_size, 1]), name="bias1", dtype=tf.float32)
 W2 = tf.Variable(tf.truncated_normal([batch_size, 1], seed=5), name="W2", dtype=tf.float32)
 b2 = tf.Variable(tf.truncated_normal([batch_size, 1]), name="bias2", dtype=tf.float32)
+
+#model
 l0 = tf.sigmoid(tf.add(tf.matmul(x, W0), b0))
+# add dropout on hidden layer
+hidden_layer_drop = tf.nn.dropout(l0, keep_prob)
+
 l1 = tf.sigmoid(tf.add(tf.matmul(l0, W1), b1))
+# add dropout on hidden layer
+hidden_layer_drop = tf.nn.dropout(l1, keep_prob)
+
 l2 = tf.sigmoid(tf.matmul(l1, W2) + b2)
+# add dropout on hidden layer
+hidden_layer_drop = tf.nn.dropout(l2, keep_prob)
 
 # L2 Variables.
 weights = tf.Variable(tf.truncated_normal([batch_size, 1], seed=5))
 biases = tf.Variable(tf.zeros([batch_size]))
-
-# add dropout on hidden layer
-hidden_layer_drop = tf.nn.dropout(l2, keep_prob)
 
 ### calculate the error
 loss = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits( logits=hidden_layer_drop, labels=y))
