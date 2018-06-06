@@ -15,7 +15,7 @@ def read_dataset():
     Y[Y > 1] = 0
     max = np.matrix(X).max()
     ### Improving gradient descent through feature scaling
-    X = 2 * X / float(max) - 1
+    #X = 2 * X / float(max) - 1
     return shuffle(X, Y, random_state=1)
 
 
@@ -30,6 +30,7 @@ samples = train_x.shape[0]
 
 x = tf.placeholder(tf.float32, shape=[None, neurons])
 y = tf.placeholder(tf.float32, shape=[None, 1])
+y_ = tf.placeholder(tf.float32, shape=[None, 1])
 keep_prob = tf.placeholder("float")
 
 W0 = tf.Variable(tf.truncated_normal([neurons, batch_size], seed=5), name="W0", dtype=tf.float32)
@@ -40,30 +41,25 @@ W2 = tf.Variable(tf.truncated_normal([batch_size, 1], seed=5), name="W2", dtype=
 b2 = tf.Variable(tf.zeros([batch_size, 1]), name="bias2", dtype=tf.float32)
 
 #model
-l0 = tf.sigmoid(tf.add(tf.matmul(x, W0), b0))
+l0 = tf.nn.relu(tf.add(tf.matmul(x, W0), b0))
 # add dropout on hidden layer
 #l0 = tf.nn.dropout(l0, keep_prob)
 
-l1 = tf.sigmoid(tf.add(tf.matmul(l0, W1), b1))
+l1 = tf.nn.relu(tf.add(tf.matmul(l0, W1), b1))
 # add dropout on hidden layer
 #l1 = tf.nn.dropout(l1, keep_prob)
 
-l2 = tf.nn.sigmoid( tf.add(tf.matmul(l1, W2), b2) )
+l2 = tf.nn.relu( tf.add(tf.matmul(l1, W2), b2) )
 # add dropout on hidden layer
-l2_dropout = tf.nn.dropout(l2, keep_prob)
+#l2_dropout = tf.nn.dropout(l2, keep_prob)
 
 
-### calculate the error
-loss = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits( logits=l2_dropout, labels=y))
-loss = tf.reduce_mean(loss + beta * tf.nn.l2_loss(l2) )
+# loss function using L2
+loss = tf.reduce_mean( tf.nn.softmax_cross_entropy_with_logits( logits=l2, labels=y))
 
-###  decayed learning rate
-global_step = tf.Variable(0, trainable=False)
-learning_rate = tf.train.exponential_decay(LR, global_step,
-                                           100000, 0.90, staircase=True)
 
 ### run the optimization
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
+optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
 
 def predict(X1):
     result = sess.run(l2, feed_dict={x: X1 ,y:test_y_batch, keep_prob : 0.5 })
@@ -85,12 +81,13 @@ with tf.Session() as sess:
             test_y_batch = test_y[i*batch_size:(i+1)*batch_size]
 
             ### run the optimizer
-            l2_, opt, lo = sess.run([l2,optimizer, loss], feed_dict={x: train_x_batch, y: train_y_batch, keep_prob : 0.5})
+            l2_, opt, loss_ = sess.run([l2,optimizer, loss], feed_dict={x: train_x_batch, y: train_y_batch, keep_prob : 0.5})
             error += np.mean(np.abs( train_y_batch - l2_ ))
             if test_x_batch.shape[0] == batch_size:
                 accuracy += 1 - np.sum(np.abs( (predict(test_x_batch) - test_y_batch))/batch_size)
         if epoch % (epochs*.1) == 0:
             print "error: " , error, " accuracy of test-set:", accuracy
+            print "loss", loss_
 
     epi_0 = np.array([[15,13,11,0,-6,-7,-5,-6,-12,-19,-25,-21,-7,6,19,24,27,28,32,35,36,40,45,48,51,50,50,48,47,46,46,44,45,42,34,22,24,26,28,27,22,17,13,16,14,14,4,-3,-10,-12,-9,-8,-9,-11,-11,-15,-17,-16,-17,-6,1,6,4,3,7,10,12,10,9,4,9,11,12,14,8,3,-1,-4,-14,-22,-29,-40,-40,-47,-48,-57,-69,-79,-79,-89,-96,-107,-115,-122,-121,-117,-103,-92,-80,-67,-59,-51,-44,-46,-45,-32,-35,-32,-31,-25,-23,-23,-25,-25,-27,-28,-27,-29,-24,-22,-16,-10,2,10,3,-3,-1,26,46,65,71,71,73,68,62,55,56,50,43,30,19,3,-3,-8,-10,-11,-15,-10,-1,7,17,24,25,30,33,31,27,23,16,11,0,-10,-23,-29,-29,-33,-36,-46,-50,-57,-51,-36,-29,-20,-12,-3,2,12]])
     epi_0 = 2 * epi_0 / float(1565.0) - 1

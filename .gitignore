@@ -1,3 +1,4 @@
+notas-sim/
 tensorboard_log/
 *.log
 *.h5
