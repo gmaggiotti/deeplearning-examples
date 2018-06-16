@@ -7,7 +7,7 @@ from nltk.corpus import stopwords
 from os import listdir
 
 
-path = "notas-sim/"
+path = "articles1/"
 
 nltk.download("punkt")
 nltk.download("stopwords")
@@ -49,7 +49,7 @@ data = nlp_clean(data)
 #iterator returned over all documents
 it = LabeledLineSentence(data, docLabels)
 
-model = gensim.models.Doc2Vec(size=300, min_count=0, alpha=0.025, min_alpha=0.025)
+model = gensim.models.Doc2Vec(size=600, min_count=0, alpha=0.025, min_alpha=0.025)
 model.build_vocab(it)
 #training of model
 for epoch in range(20):
@@ -58,7 +58,7 @@ for epoch in range(20):
     model.alpha -= 0.002
     model.min_alpha = model.alpha
 #saving the created model
-#model.save(‘doc2vec.model’)
+model.save('valentin.model')
 print 'model saved'
 
 
@@ -72,6 +72,4 @@ similar_doc = model.docvecs.most_similar(14)
 #print similar_doc    ARTICLE-772970
 
 
-#to get most similar document with similarity scores using document- name
-sims = model.docvecs.most_similar('infobae-nota1.txt')
-print sims
+

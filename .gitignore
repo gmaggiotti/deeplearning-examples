@@ -1,3 +1,9 @@
+dataset2
+article*
+word2vec/doc2vec.model
+word2vec/doc2vec.model.syn1neg.npy
+word2vec/doc2vec.model.wv.syn0.npy
+word2vec/valentin.model
 notas-sim/
 tensorboard_log/
 *.log
