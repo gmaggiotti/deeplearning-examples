@@ -28,7 +28,7 @@ model = gensim.models.doc2vec.Doc2Vec.load('valentin.model')
 #
 # print
 #to get most similar document with similarity scores using document- name
-sims = model.docvecs.most_similar("0113.txt")
+sims = model.docvecs.most_similar("0108.txt")
 print sims
 
 # ###  Get related links

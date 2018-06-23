@@ -9,9 +9,6 @@ from os import listdir
 
 path = "articles1/"
 
-nltk.download("punkt")
-nltk.download("stopwords")
-
 #now create a list that contains the name of all the text file in your data #folder
 docLabels = []
 docLabels = [f for f in listdir(path) ]
