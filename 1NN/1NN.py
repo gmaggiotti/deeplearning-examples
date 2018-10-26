@@ -50,7 +50,7 @@ def predict(X1):
 
 test_dataset=[1,9,19,33,16,2,1]
 result = predict(test_dataset)
-print("expected output 1, predicted output " + repr(result))
+print("expected output 1, predicted output: " + repr(result))
 assert (result > 0.95), "Test Failed. Expected result > 0.95"
 
 test_dataset=[1,0, 1, 4, 1,3,1]
