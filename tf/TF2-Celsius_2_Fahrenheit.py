@@ -10,13 +10,17 @@ fahrenheit_a = np.array([-40,  14, 32, 46, 59, 72, 100],  dtype=float)
 for i,c in enumerate(celsius_q):
     print("{} degrees Celsius = {} degrees Fahrenheit".format(c, fahrenheit_a[i]))
 
-l0 = tf.keras.layers.Dense(units=1, input_shape=[1])
-model = tf.keras.Sequential([l0])
+tf.set_random_seed(7)
+# Dense layer is a fully-connected layer
+l0 = tf.keras.layers.Dense(units=4, input_shape=[1], activation='relu')
+l1 = tf.keras.layers.Dense(units=4, activation='relu')
+l2 = tf.keras.layers.Dense(units=1, activation='relu')
+model = tf.keras.Sequential([l0, l1, l2])
 
-model.compile(loss='mean_squared_error',
-              optimizer=tf.keras.optimizers.Adam(0.1))
+optimizer = tf.keras.optimizers.Adam(0.1)
+model.compile(loss='mean_squared_error', optimizer=optimizer)
 
-history = model.fit(celsius_q, fahrenheit_a, epochs=500, verbose=False)
+history = model.fit(celsius_q, fahrenheit_a, epochs=500, verbose=True)
 
 print("Finished training the model")
 print("predict 100 to {}".format(model.predict([100.0])))
