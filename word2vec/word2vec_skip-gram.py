@@ -5,27 +5,10 @@ import os
 import random
 import tensorflow as tf
 import zipfile
-from matplotlib import pylab
 from six.moves import range
 from six.moves.urllib.request import urlretrieve
-from sklearn.manifold import TSNE
 
-url = 'http://mattmahoney.net/dc/'
-
-def maybe_download(filename, expected_bytes):
-    """Download a file if not present, and make sure it's the right size."""
-    if not os.path.exists(filename):
-        filename, _ = urlretrieve(url + filename, filename)
-    statinfo = os.stat(filename)
-    if statinfo.st_size == expected_bytes:
-        print('Found and verified %s' % filename)
-    else:
-        print(statinfo.st_size)
-        raise Exception(
-            'Failed to verify ' + filename + '. Can you get to it with a browser?')
-    return filename
-
-filename = 'text8.zip' #maybe_download('text8.zip', 31344016)
+filename = 'text8-es.zip'
 
 
 ###  Read data into string
@@ -36,9 +19,9 @@ def read_data(filename):
         data = tf.compat.as_str(f.read(f.namelist()[0])).split()
     return data
 
+
 words = read_data(filename)
 print('Data size %d' % len(words))
-
 
 ### Build the dictionary and replace rare words with UNK token.
 ### count['word', frec] limited with vocabulary_size
@@ -46,6 +29,7 @@ print('Data size %d' % len(words))
 ### data[] has all words from count[] indexed with dictionary[] autoincrement_id
 
 vocabulary_size = 50000
+
 
 def build_dataset(words):
     count = [['UNK', -1]]
@@ -66,15 +50,16 @@ def build_dataset(words):
     reverse_dictionary = dict(zip(dictionary.values(), dictionary.keys()))
     return data, count, dictionary, reverse_dictionary
 
+
 data, count, dictionary, reverse_dictionary = build_dataset(words)
 print('Most common words (+UNK)', count[:5])
 print('Sample data', data[:10])
 del words  # Hint to reduce memory.
 
-
 ### Func that generates batch
 
 data_index = 0
+
 
 def generate_batch(batch_size, num_skips, skip_window):
     global data_index
@@ -82,14 +67,14 @@ def generate_batch(batch_size, num_skips, skip_window):
     assert num_skips <= 2 * skip_window
     batch = np.ndarray(shape=(batch_size), dtype=np.int32)
     labels = np.ndarray(shape=(batch_size, 1), dtype=np.int32)
-    span = 2 * skip_window + 1 # [ skip_window target skip_window ]
+    span = 2 * skip_window + 1  # [ skip_window target skip_window ]
     buffer = collections.deque(maxlen=span)
     for _ in range(span):
         buffer.append(data[data_index])
         data_index = (data_index + 1) % len(data)
     for i in range(batch_size // num_skips):
         target = skip_window  # target label at the center of the buffer
-        targets_to_avoid = [ skip_window ]
+        targets_to_avoid = [skip_window]
         for j in range(num_skips):
             while target in targets_to_avoid:
                 target = random.randint(0, span - 1)
@@ -100,6 +85,7 @@ def generate_batch(batch_size, num_skips, skip_window):
         data_index = (data_index + 1) % len(data)
     return batch, labels
 
+
 print('data:', [reverse_dictionary[di] for di in data[:8]])
 
 for num_skips, skip_window in [(2, 1), (4, 2)]:
@@ -109,24 +95,22 @@ for num_skips, skip_window in [(2, 1), (4, 2)]:
     print('    batch:', [reverse_dictionary[bi] for bi in batch])
     print('    labels:', [reverse_dictionary[li] for li in labels.reshape(8)])
 
-
 ### Train a skip-gram model.
 batch_size = 128
-embedding_size = 128 # Dimension of the embedding vector.
-skip_window = 1 # How many words to consider left and right.
-num_skips = 2 # How many times to reuse an input to generate a label.
+embedding_size = 128  # Dimension of the embedding vector.
+skip_window = 1  # How many words to consider left and right.
+num_skips = 2  # How many times to reuse an input to generate a label.
 # We pick a random validation set to sample nearest neighbors. here we limit the
 # validation samples to the words that have a low numeric ID, which by
 # construction are also the most frequent.
-valid_size = 16 # Random set of words to evaluate similarity on.
-valid_window = 100 # Only pick dev samples in the head of the distribution.
+valid_size = 16  # Random set of words to evaluate similarity on.
+valid_window = 100  # Only pick dev samples in the head of the distribution.
 valid_examples = np.array(random.sample(range(valid_window), valid_size))
-num_sampled = 64 # Number of negative examples to sample.
+num_sampled = 64  # Number of negative examples to sample.
 
 graph = tf.Graph()
 
 with graph.as_default(), tf.device('/cpu:0'):
-
     # Input data.
     train_dataset = tf.placeholder(tf.int32, shape=[batch_size])
     train_labels = tf.placeholder(tf.int32, shape=[batch_size, 1])
@@ -160,8 +144,7 @@ with graph.as_default(), tf.device('/cpu:0'):
     # We use the cosine distance:
     norm = tf.sqrt(tf.reduce_sum(tf.square(embeddings), 1, keep_dims=True))
     normalized_embeddings = embeddings / norm
-    valid_embeddings = tf.nn.embedding_lookup(
-        normalized_embeddings, valid_dataset)
+    valid_embeddings = tf.nn.embedding_lookup(normalized_embeddings, valid_dataset)
     similarity = tf.matmul(valid_embeddings, tf.transpose(normalized_embeddings))
 
 ### Iterate thru batches
@@ -174,7 +157,7 @@ with tf.Session(graph=graph) as session:
     average_loss = 0
     for step in range(num_steps):
         batch_data, batch_labels = generate_batch(batch_size, num_skips, skip_window)
-        feed_dict = {train_dataset : batch_data, train_labels : batch_labels}
+        feed_dict = {train_dataset: batch_data, train_labels: batch_labels}
         _, l = session.run([optimizer, loss], feed_dict=feed_dict)
         average_loss += l
         if step % 2000 == 0:
@@ -188,8 +171,8 @@ with tf.Session(graph=graph) as session:
             sim = similarity.eval()
             for i in range(valid_size):
                 valid_word = reverse_dictionary[valid_examples[i]]
-                top_k = 8 # number of nearest neighbors
-                nearest = (-sim[i, :]).argsort()[1:top_k+1]
+                top_k = 8  # number of nearest neighbors
+                nearest = (-sim[i, :]).argsort()[1:top_k + 1]
                 log = 'Nearest to %s:' % valid_word
                 for k in range(top_k):
                     close_word = reverse_dictionary[nearest[k]]
@@ -197,8 +180,8 @@ with tf.Session(graph=graph) as session:
                 print(log)
     final_embeddings = normalized_embeddings.eval()
 
-
 ### Save final_embeddings into pickle format
 import cPickle as pickle
-with open('embeddings-es.pkl','wb') as fp:
-    pickle.dump((final_embeddings,dictionary,reverse_dictionary),fp,-1)
+
+with open('embeddings-es.pkl', 'wb') as fp:
+    pickle.dump((final_embeddings, dictionary, reverse_dictionary), fp, -1)
