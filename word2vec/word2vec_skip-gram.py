@@ -1,12 +1,10 @@
 import collections
 import math
 import numpy as np
-import os
 import random
 import tensorflow as tf
 import zipfile
 from six.moves import range
-from six.moves.urllib.request import urlretrieve
 
 filename = 'text8-es.zip'
 
