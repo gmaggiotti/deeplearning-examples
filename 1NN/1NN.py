@@ -18,6 +18,11 @@ def softplus(x, deriv=False):
         return 1 / (1 + np.exp(-x))
     return np.log(1 + np.exp(x))
 
+def relu(x, deriv=False):
+    if(deriv == True):
+        return 1 * (x > 0)
+    return np.max(x,0)
+
 
 # input data, each column represent a dif neuron
 X = np.loadtxt("1NN/X.txt", delimiter=",")
@@ -40,14 +45,14 @@ w0 = 2 * np.random.random((X.size / X.__len__(), 1)) - 1  # mxn matrix of weight
 for j in xrange(60000):
 
     # Calculate forward through the network.
-    l1 = softplus(np.dot(X, w0))
+    l1 = relu(np.dot(X, w0))
 
     # Error back propagation of errors using the chain rule.
     l1_error = y - l1
     if (j % 10000) == 0:  # Only print the error every 10000 steps, to save time and limit the amount of output.
         print("epoch {}: {}".format(j, np.mean(np.abs(l1_error))))
 
-    adjustment = l1_error * softplus(l1, deriv=True)  # (y-a).d/dw(-a), a = sigmoid(Sum Xi*Wi)
+    adjustment = l1_error * relu(l1, deriv=True)  # (y-a).d/dw(-a), a = sigmoid(Sum Xi*Wi)
 
     # update weights (no learning rate term)
     w0 += X.T.dot(adjustment)
@@ -56,7 +61,7 @@ for j in xrange(60000):
 def predict(X1):
     max = np.matrix(X1).max()
     l0 = 2 * np.array(X1, dtype=np.float32) / float(max) - 1
-    l1 = softplus(np.dot(l0, w0))
+    l1 = relu(np.dot(l0, w0))
     return l1[0]  # since process X1[0] output would be l2[0]
 
 
