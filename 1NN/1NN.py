@@ -20,7 +20,7 @@ def softplus(x, deriv=False):
 
 def relu(x, deriv=False):
     if(deriv == True):
-        return 1 * (x > 0)
+        return 1 * (x >= 0)
     return np.max(x,0)
 
 
