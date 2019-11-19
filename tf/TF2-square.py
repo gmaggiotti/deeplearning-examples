@@ -24,7 +24,7 @@ history = model.fit(x_dataset, y_dataset, epochs=500, verbose=True)
 
 x_range = 30
 print("Finished training the model")
-print("predict 2.3^2 to {}".format(model.predict([2.3])))
+print("predict 2.3^2 to {}".format(model.predict([2.3])[0][0]))
 x = [x for x in range(-x_range, x_range)]
 y_square = [y ** 2 for y in range(-x_range, x_range)]
 pred_y_sq = [model.predict([i])[0][0] for i in range(-x_range, x_range)]
