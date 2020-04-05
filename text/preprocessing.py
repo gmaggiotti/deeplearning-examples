@@ -2,6 +2,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
+import numpy as np
 
 ps = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
@@ -17,6 +18,7 @@ print(filtered)
 
 stemmed = [ps.stem(word) for word in filtered]
 print(stemmed)
+np.vectorize(ps.stem)
 
 lemm = [lemmatizer.lemmatize(word) for word in filtered]
 print(lemm)
