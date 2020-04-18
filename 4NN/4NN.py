@@ -9,11 +9,11 @@ def sigmoid(x, deriv=False):
 
 
 # input data, each column represent a dif neuron
-X = np.loadtxt("4NN/train_dataset.txt", delimiter=",")
+X = np.loadtxt("4NN/train_dataset.csv", delimiter=",")
 max = np.matrix(X).max()
 X = 2 * X / float(max) - 1
 # output, are the one-hot encoded labels
-y = np.loadtxt("4NN/label_dataset.txt", delimiter=",").reshape(X.__len__(), 1)
+y = np.loadtxt("4NN/label_dataset.csv", delimiter=",").reshape(X.__len__(), 1)
 
 np.random.seed(1)
 # synapses
@@ -33,7 +33,7 @@ for j in xrange(600):
 
     # Error back propagation of errors using the chain rule.
     l3_error = y - l3
-    if (j % 10000) == 0:
+    if (j % 100) == 0:
         print("Error: " + str(np.mean(np.abs(l3_error))))
     losses.append(np.mean(np.abs(l3_error)))
 
