@@ -9,11 +9,11 @@ def sigmoid(x, deriv=False):
 
 
 # input data, each column represent a dif neuron
-X = np.loadtxt("4NN/train_dataset.csv", delimiter=",")
+X = np.loadtxt("4NN/train_dataset.txt", delimiter=",")
 max = np.matrix(X).max()
 X = 2 * X / float(max) - 1
 # output, are the one-hot encoded labels
-y = np.loadtxt("4NN/label_dataset.csv", delimiter=",").reshape(X.__len__(), 1)
+y = np.loadtxt("4NN/label_dataset.txt", delimiter=",").reshape(X.__len__(), 1)
 
 np.random.seed(1)
 # synapses
