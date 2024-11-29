@@ -74,4 +74,4 @@ assert (result > 0.95), "Test Failed. Exepected result > 0.95"
 test_dataset = [1, 0, 2, 2, 3, 3, 1]
 result = predict(test_dataset)
 print("expected output 0, predicted output " + repr(result))
-assert (result < 0.95), "Test Failed. Exepected result < 0.95"
+assert (result < 0.95), "Test Failed. Excpected result < 0.95"
