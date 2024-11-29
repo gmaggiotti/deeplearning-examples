@@ -26,7 +26,7 @@ error = 0
 for j in range(400):
 
     # Calculate forward through the network.
-    l1 = X*w0
+    l1 = X.dot(w0)
 
     # Error back propagation of errors using the chain rule.
     l1_error = y.T - l1
@@ -35,7 +35,10 @@ for j in range(400):
     if(error > pre_error):
         break
 
-    adjustment = np.abs(l1_error * (X))
+    # update weights using gradient descent
+    adjustment = X.T.dot(l1_error) / X.shape[0]
+    w0 += 0.001 * adjustment
+
     pre_error = error
 
     # update weights (no learning rate term)
@@ -51,6 +54,6 @@ plt.plot(X, y, 'o', color='black');
 
 x1 = np.linspace(0, 50, 50)
 y1 = x1*w0
-plt.plot(x1, y1, 'o', color='green');
+plt.plot(x1, y1, '-', color='green');
 plt.show()
 
