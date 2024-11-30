@@ -8,7 +8,7 @@ import numpy as np
 # y = np.loadtxt("1NN/Y.txt", delimiter=",").reshape(X.__len__(), 1)
 
 X = np.arange(50)
-delta = np.random.uniform(-2,2, size=(50,))
+delta = np.random.uniform(-2,2, size=(50,)) * 4
 y = .6 * X + delta
 
 np.random.seed(1)  # The seed for the random generator is set so that it will return the same random numbers each time,
@@ -40,10 +40,6 @@ for j in range(400):
     w0 += 0.001 * adjustment
 
     pre_error = error
-
-    # update weights (no learning rate term)
-    w0 += adjustment.sum()/adjustment.size * 0.001
-
 
 import matplotlib.pyplot as plt
 plt.style.use('seaborn-whitegrid')
